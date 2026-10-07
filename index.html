@@ -1,22 +1,110 @@
-<!doctype html><html lang="id"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>NEXUS Finance</title><style>
-:root{--bg:#f5f7fb;--card:#fff;--text:#18212f;--muted:#6b7280;--line:#e7eaf0;--accent:#2563eb}*{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--text);font:15px system-ui,-apple-system,Segoe UI,Roboto,sans-serif}header{background:#111827;color:#fff;padding:22px 28px}header h1{margin:0}header p{margin:4px 0;color:#cbd5e1}main{max-width:1100px;margin:25px auto;padding:0 18px}.grid{display:grid;grid-template-columns:repeat(4,1fr);gap:14px}.card,.account{background:#fff;border:1px solid var(--line);border-radius:16px;padding:18px}.label{color:var(--muted);font-size:13px}.value{font-size:22px;font-weight:750;margin-top:5px}.accounts{display:grid;grid-template-columns:repeat(5,1fr);gap:12px}section{margin:18px 0}.head{display:flex;justify-content:space-between;align-items:center}form{display:grid;grid-template-columns:1fr 1fr;gap:12px}label{font-weight:650;font-size:13px}input,select{width:100%;margin-top:6px;padding:11px;border:1px solid #d9dee8;border-radius:10px;font:inherit}.full{grid-column:1/-1}button{border:0;border-radius:10px;padding:11px 16px;background:var(--accent);color:white;font-weight:700;cursor:pointer}button:disabled{opacity:.6}.msg{display:none;margin-top:10px;padding:10px;border-radius:10px}.ok{display:block;background:#ecfdf3;color:#166534}.err{display:block;background:#fef2f2;color:#991b1b}table{width:100%;border-collapse:collapse}th,td{text-align:left;padding:12px;border-bottom:1px solid var(--line)}@media(max-width:800px){.grid,.accounts{grid-template-columns:1fr 1fr}form{grid-template-columns:1fr}.full{grid-column:auto}}</style><link rel="manifest" href="manifest.json"><meta name="theme-color" content="#111827"><meta name="mobile-web-app-capable" content="yes"><meta name="apple-mobile-web-app-capable" content="yes"></head><body>
-<header><h1>NEXUS Finance</h1><p>Personal finance • Google Sheets backend</p></header><main>
-<div class="grid"><div class="card"><div class="label">Total Saldo</div><div class="value">—</div></div><div class="card"><div class="label">Income Bulan Ini</div><div class="value">—</div></div><div class="card"><div class="label">Expense Bulan Ini</div><div class="value">—</div></div><div class="card"><div class="label">Cash Flow</div><div class="value">—</div></div></div>
-<section><div class="head"><h2>Rekening</h2><button onclick="location.reload()">Refresh</button></div><div class="accounts"><div class="account"><div class="label">Mandiri</div><div class="value">—</div></div><div class="account"><div class="label">GoPay</div><div class="value">—</div></div><div class="account"><div class="label">Bank Jago</div><div class="value">—</div></div><div class="account"><div class="label">Blu</div><div class="value">—</div></div><div class="account"><div class="label">Cash</div><div class="value">—</div></div></div></section>
-<section class="card"><h2>Tambah Transaksi</h2><form id="f">
-<div><label>Jenis</label><select id="type"><option>Expense</option><option>Income</option><option>Transfer</option></select></div>
-<div><label>Nominal</label><input id="amount" type="number" min="1" step="1" required placeholder="25000"></div>
-<div id="cw"><label>Kategori</label><select id="cat"></select></div><div id="aw"><label>Rekening</label><select id="acc"></select></div>
-<div id="fw" style="display:none"><label>Rekening Asal</label><select id="from"></select></div><div id="tw" style="display:none"><label>Rekening Tujuan</label><select id="to"></select></div>
-<div class="full"><label>Deskripsi</label><input id="desc" placeholder="Contoh: Tiket KRL"></div><div class="full"><button id="save">Simpan Transaksi</button></div></form><div id="msg" class="msg"></div></section>
-<section class="card"><h2>Transaksi Terakhir</h2><p style="color:#6b7280">Riwayat tetap dikelola oleh Dashboard Google Sheets untuk saat ini.</p></section>
-</main><script>
+<!doctype html>
+<html lang="id">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="theme-color" content="#111827">
+<link rel="manifest" href="manifest.json">
+<title>NEXUS Finance</title>
+<style>
+*{box-sizing:border-box}body{margin:0;background:#f5f7fb;color:#18212f;font:15px system-ui,-apple-system,Segoe UI,Roboto,sans-serif}
+header{background:#111827;color:#fff;padding:20px}main{max-width:720px;margin:auto;padding:16px}
+.card{background:#fff;border:1px solid #e7eaf0;border-radius:16px;padding:18px;margin:14px 0}
+h1{margin:0;font-size:24px}h2{margin-top:0}label{font-weight:700;font-size:13px}
+input,select{width:100%;margin-top:6px;padding:12px;border:1px solid #d9dee8;border-radius:10px;font:inherit}
+button{width:100%;padding:12px;border:0;border-radius:10px;background:#2563eb;color:white;font-weight:700;margin-top:12px}
+.grid{display:grid;grid-template-columns:1fr 1fr;gap:10px}.row{margin-bottom:10px}
+.msg{padding:10px;border-radius:10px;margin-top:10px;display:none}.ok{display:block;background:#ecfdf3;color:#166534}.err{display:block;background:#fef2f2;color:#991b1b}
+@media(max-width:500px){.grid{grid-template-columns:1fr}}
+</style>
+</head>
+<body>
+<header><h1>NEXUS Finance</h1></header>
+<main>
+<section class="card" id="setup">
+<h2>Setup NEXUS</h2>
+<p>Masukkan NEXUS Token. Token disimpan hanya di perangkat ini dan tidak ditulis ke GitHub.</p>
+<label>NEXUS Token</label>
+<input id="token" type="password" autocomplete="off" placeholder="Masukkan token">
+<button id="saveToken">Simpan Token</button>
+<div id="tokenMsg" class="msg"></div>
+</section>
+
+<section class="card">
+<h2>Tambah Transaksi</h2>
+<form id="form">
+<div class="grid">
+<div class="row"><label>Jenis</label><select id="type"><option>Expense</option><option>Income</option><option>Transfer</option></select></div>
+<div class="row"><label>Nominal</label><input id="amount" type="number" min="1" required placeholder="25000"></div>
+<div class="row" id="catWrap"><label>Kategori</label><select id="category"></select></div>
+<div class="row" id="accWrap"><label>Rekening</label><select id="account"></select></div>
+<div class="row" id="fromWrap" style="display:none"><label>Rekening Asal</label><select id="fromAccount"></select></div>
+<div class="row" id="toWrap" style="display:none"><label>Rekening Tujuan</label><select id="toAccount"></select></div>
+</div>
+<div class="row"><label>Deskripsi</label><input id="description" placeholder="Contoh: KRL"></div>
+<button id="submit">Simpan Transaksi</button>
+</form>
+<div id="msg" class="msg"></div>
+</section>
+</main>
+
+<script>
 const API='https://script.google.com/macros/s/AKfycbz-q2rvWVmg8Jcv1wKn9uly4COb7FZv9Ts5LOr5y_uQejlR8pwlWF-K4SrxRdRGzYnu/exec';
-const TOKEN='PASTE_TOKEN_DI_SINI';
-const A=['Mandiri','GoPay','Bank Jago','Blu','Cash'],E=['Makan','Jajan','Transportasi','Rumah & Tagihan','Belanja','Keluarga & Anak','Cicilan & Langganan','Personal & Lifestyle'],I=['Gaji','Remunerasi','Uang Makan','Bonus','Lainnya'];
-const $=x=>document.getElementById(x), opts=a=>a.map(x=>`<option>${x}</option>`).join('');
-$('acc').innerHTML=opts(A);$('from').innerHTML=opts(A);$('to').innerHTML=opts(A);
-function ui(){let t=$('type').value,is=t==='Transfer';$('cat').innerHTML=opts(t==='Income'?I:E);$('cw').style.display=is?'none':'block';$('aw').style.display=is?'none':'block';$('fw').style.display=is?'block':'none';$('tw').style.display=is?'block':'none'}$('type').onchange=ui;ui();
-function msg(s,ok){$('msg').textContent=s;$('msg').className='msg '+(ok?'ok':'err')}
-$('f').onsubmit=async e=>{e.preventDefault();let b=$('save'),t=$('type').value,is=t==='Transfer',from=is?$('from').value:'',to=is?$('to').value:'';if(is&&from===to)return msg('Rekening asal dan tujuan harus berbeda.',false);b.disabled=true;msg('Mengirim…',true);let data={type:t,amount:Number($('amount').value),category:is?'':$('cat').value,account:is?from:$('acc').value,description:$('desc').value,fromAccount:from,toAccount:to,token:TOKEN};try{let r=await fetch(API,{method:'POST',headers:{'Content-Type':'text/plain;charset=utf-8'},body:JSON.stringify(data)}),txt=await r.text();if(!r.ok)throw Error('HTTP '+r.status+' — '+txt);try{let j=JSON.parse(txt);if(j.success===false)throw Error(j.message||'Backend menolak transaksi')}catch(x){if(x.message&&!x.message.startsWith('Unexpected'))throw x}msg('✅ Transaksi berhasil dikirim ke NEXUS.',true);$('f').reset();ui()}catch(x){msg('❌ Transaksi gagal: '+x.message,false)}finally{b.disabled=false}};
-</script><script>if("serviceWorker"in navigator){addEventListener("load",()=>navigator.serviceWorker.register("./sw.js").catch(console.error));}</script></body></html>
+const ACC=['Mandiri','GoPay','Bank Jago','Blu','Cash'];
+const EXP=['Makan','Jajan','Transportasi','Rumah & Tagihan','Belanja','Keluarga & Anak','Cicilan & Langganan','Personal & Lifestyle'];
+const INC=['Gaji','Remunerasi','Uang Makan','Bonus','Lainnya'];
+const $=id=>document.getElementById(id);
+const opts=a=>a.map(x=>`<option>${x}</option>`).join('');
+
+$('account').innerHTML=opts(ACC);$('fromAccount').innerHTML=opts(ACC);$('toAccount').innerHTML=opts(ACC);
+
+function token(){return localStorage.getItem('nexus_token')||''}
+function message(el,text,ok){el.textContent=text;el.className='msg '+(ok?'ok':'err')}
+function refreshUI(){
+  const t=$('type').value, transfer=t==='Transfer';
+  $('category').innerHTML=opts(t==='Income'?INC:EXP);
+  $('catWrap').style.display=transfer?'none':'block';
+  $('accWrap').style.display=transfer?'none':'block';
+  $('fromWrap').style.display=transfer?'block':'none';
+  $('toWrap').style.display=transfer?'block':'none';
+}
+$('type').onchange=refreshUI;refreshUI();
+
+$('saveToken').onclick=()=>{
+  const v=$('token').value.trim();
+  if(!v)return message($('tokenMsg'),'Token belum diisi.',false);
+  localStorage.setItem('nexus_token',v);
+  $('token').value='';
+  message($('tokenMsg'),'✅ Token tersimpan di perangkat ini.',true);
+};
+
+$('form').onsubmit=async e=>{
+ e.preventDefault();
+ const tok=token();
+ if(!tok)return message($('msg'),'Masukkan token terlebih dahulu.',false);
+ const t=$('type').value, transfer=t==='Transfer';
+ if(transfer && $('fromAccount').value===$('toAccount').value)
+   return message($('msg'),'Rekening asal dan tujuan harus berbeda.',false);
+ const btn=$('submit');btn.disabled=true;btn.textContent='Mengirim…';
+ try{
+   const data={
+     type:t,amount:Number($('amount').value),
+     category:transfer?'':$('category').value,
+     account:transfer?$('fromAccount').value:$('account').value,
+     description:$('description').value,
+     fromAccount:transfer?$('fromAccount').value:'',
+     toAccount:transfer?$('toAccount').value:'',
+     token:tok
+   };
+   const r=await fetch(API,{method:'POST',headers:{'Content-Type':'text/plain;charset=utf-8'},body:JSON.stringify(data)});
+   const text=await r.text();
+   let j;try{j=JSON.parse(text)}catch{throw Error('Response backend bukan JSON')}
+   if(!r.ok||j.success===false)throw Error(j.message||('HTTP '+r.status));
+   message($('msg'),'✅ Transaksi berhasil masuk ke Google Sheets.',true);
+   $('form').reset();refreshUI();
+ }catch(err){message($('msg'),'❌ Transaksi gagal: '+err.message,false)}
+ finally{btn.disabled=false;btn.textContent='Simpan Transaksi'}
+};
+</script>
+</body>
+</html>
