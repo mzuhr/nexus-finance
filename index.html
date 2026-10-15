@@ -60,7 +60,7 @@ function setStatus(id,msg,kind=""){const el=$(id);el.textContent=msg;el.classNam
 async function request(payload,timeoutMs=12000){const controller=new AbortController(),timer=setTimeout(()=>controller.abort(),timeoutMs);try{const res=await fetch(API,{method:"POST",redirect:"follow",headers:{"Content-Type":"text/plain;charset=utf-8"},body:JSON.stringify(payload),signal:controller.signal});const text=await res.text();let data;try{data=JSON.parse(text)}catch(e){throw new Error("Response bukan JSON (HTTP "+res.status+"): "+text.slice(0,250))}return{res,data}}catch(e){if(e.name==="AbortError")throw new Error("Request timeout setelah 12 detik.");throw e}finally{clearTimeout(timer)}}
 const CATEGORY_OPTIONS={
  Expense:["Makan","Jajan","Transportasi","Rumah & Tagihan","Belanja","Keluarga & Anak","Cicilan & Langganan","Personal & Lifestyle"],
- Income:["Gaji","Bonus / Insentif","Freelance","Cashback / Reward","Pendapatan Lainnya"]
+ Income:["Gaji","Remunerasi","Bonus","Penghasilan Lain"]
 };
 let lastCategoryType="Expense";
 function updateTypeFields(){
