@@ -26,63 +26,410 @@ input:focus,select:focus{border-color:#64748b;box-shadow:0 0 0 2px #cbd5df55}.wi
 @media(max-width:680px){.page{padding:12px 12px calc(16px + env(safe-area-inset-bottom))}.brand{font-size:18px}.balances{justify-content:flex-start;gap:7px 12px;padding:10px;margin-bottom:12px}.balance{font-size:12px}.main{grid-template-columns:1fr;gap:12px}.formgrid{gap:8px}input,select{padding:10px;font-size:14px}.panel{padding:11px}.tx{padding:8px 0}.tokenrow{grid-template-columns:1fr 1fr}.tokenrow input{grid-column:1/-1;grid-row:1}}
 </style>
 </head>
-<body><div class="page">
-<header><div class="brand">NEXUS <span>FINANCE</span></div><div style="display:flex;align-items:center;gap:8px;flex-wrap:wrap;justify-content:flex-end"><a class="navbtn" href="./paylater.html">PayLater &amp; Hutang ↗</a><button class="iconbtn" id="refresh" type="button">↻ Muat ulang</button></div></header>
-<section class="balances" id="balances" aria-label="Saldo rekening"><span class="balance">Memuat saldo…</span></section>
+<body>
+<div class="page">
+<header>
+  <div class="brand">NEXUS <span>FINANCE</span></div>
+  <div style="display:flex;align-items:center;gap:8px;flex-wrap:wrap;justify-content:flex-end">
+    <a class="navbtn" href="./paylater.html">PayLater &amp; Hutang ↗</a>
+    <button class="iconbtn" id="refresh" type="button">↻ Muat ulang</button>
+  </div>
+</header>
+
+<section class="balances" id="balances" aria-label="Saldo rekening">
+  <span class="balance">Memuat saldo…</span>
+</section>
+
 <main class="main">
-<section><div class="panel">
-<div class="panelhead"><h2>INPUT TRANSAKSI</h2><span class="pill">Quick entry</span></div>
-<form id="transactionForm"><div class="formgrid">
-<div class="field"><label for="type">Jenis transaksi</label><select id="type" required><option value="Expense">Expense</option><option value="Income">Income</option><option value="Transfer">Transfer</option></select></div>
-<div class="field" id="categoryWrap"><label for="category">Kategori</label><select id="category"><option>Makan</option><option>Jajan</option><option>Transportasi</option><option>Rumah &amp; Tagihan</option><option>Belanja</option><option>Keluarga &amp; Anak</option><option>Cicilan &amp; Langganan</option><option>Personal &amp; Lifestyle</option></select></div>
-<div class="field" id="accountWrap"><label for="account">Rekening</label><select id="account"><option>Mandiri</option><option>GoPay</option><option>Bank Jago</option><option>Blu</option><option>Cash</option></select></div>
-<div class="field" id="amountWrap"><label for="amount">Nominal (Rp)</label><input id="amount" type="number" min="1" step="1" inputmode="numeric" placeholder="25000" required></div>
-<div class="field" id="fromWrap" style="display:none"><label for="fromAccount">Dari rekening</label><select id="fromAccount"><option>Mandiri</option><option>GoPay</option><option>Bank Jago</option><option>Blu</option><option>Cash</option></select></div>
-<div class="field" id="toWrap" style="display:none"><label for="toAccount">Ke rekening</label><select id="toAccount"><option>Mandiri</option><option>GoPay</option><option>Bank Jago</option><option>Blu</option><option>Cash</option></select></div>
-<div class="field wide"><label for="description">Keterangan</label><input id="description" maxlength="300" placeholder="Opsional, mis. KRL ke kantor"></div>
-<div class="wide"><button class="save" id="saveTx" type="submit">SIMPAN TRANSAKSI</button></div>
-</div></form><div id="txStatus" class="status" role="status">Siap. Simpan token di Pengaturan jika ini pertama kali digunakan.</div>
-</div></section>
-<section><div class="panel"><div class="panelhead"><h2>5 TRANSAKSI TERAKHIR</h2><span class="pill" id="txCount">—</span></div><div id="latest" class="txlist"><div class="empty">Memuat transaksi…</div></div></div></section>
-</main>
-<details class="settings" id="settings"><summary>PENGATURAN &amp; TOKEN API</summary>
-<div style="font-size:11px;color:#667085;margin-top:8px">Token hanya disimpan di browser ini dan tidak ditulis ke file publik GitHub.</div>
-<div class="tokenrow"><input id="token" type="password" autocomplete="off" placeholder="Masukkan token NEXUS"><button class="token-save" id="saveToken" type="button">Simpan token</button><button class="token-clear" id="clearToken" type="button">Hapus</button></div><div id="apiStatus" class="status">Token belum diperiksa.</div>
-</details><div class="foot">NEXUS Finance · Google Sheets backend</div>
+<section>
+<div class="panel">
+  <div class="panelhead"><h2>INPUT TRANSAKSI</h2><span class="pill">Quick entry</span></div>
+
+  <form id="transactionForm">
+  <div class="formgrid">
+    <div class="field">
+      <label for="type">Jenis transaksi</label>
+      <select id="type" required>
+        <option value="Expense">Expense</option>
+        <option value="Income">Income</option>
+        <option value="Transfer">Transfer</option>
+      </select>
+    </div>
+
+    <div class="field" id="categoryWrap">
+      <label for="category">Kategori</label>
+      <select id="category"></select>
+    </div>
+
+    <div class="field" id="accountWrap">
+      <label for="account">Rekening</label>
+      <select id="account">
+        <option>Mandiri</option>
+        <option>GoPay</option>
+        <option>Bank Jago</option>
+        <option>Blu</option>
+        <option>Cash</option>
+        <option>ShopeePay</option>
+        <option>OVO</option>
+      </select>
+    </div>
+
+    <div class="field" id="amountWrap">
+      <label for="amount">Nominal (Rp)</label>
+      <input id="amount" type="number" min="1" step="1" inputmode="numeric" placeholder="25000" required>
+    </div>
+
+    <div class="field" id="fromWrap" style="display:none">
+      <label for="fromAccount">Dari rekening</label>
+      <select id="fromAccount">
+        <option>Mandiri</option>
+        <option>GoPay</option>
+        <option>Bank Jago</option>
+        <option>Blu</option>
+        <option>Cash</option>
+        <option>ShopeePay</option>
+        <option>OVO</option>
+      </select>
+    </div>
+
+    <div class="field" id="toWrap" style="display:none">
+      <label for="toAccount">Ke rekening</label>
+      <select id="toAccount">
+        <option>Mandiri</option>
+        <option>GoPay</option>
+        <option>Bank Jago</option>
+        <option>Blu</option>
+        <option>Cash</option>
+        <option>ShopeePay</option>
+        <option>OVO</option>
+      </select>
+    </div>
+
+    <div class="field wide">
+      <label for="description">Keterangan</label>
+      <input id="description" maxlength="300" placeholder="Opsional, mis. KRL ke kantor">
+    </div>
+
+    <div class="wide">
+      <button class="save" id="saveTx" type="submit">SIMPAN TRANSAKSI</button>
+    </div>
+  </div>
+  </form>
+
+  <div id="txStatus" class="status" role="status">Siap. Simpan token di Pengaturan jika ini pertama kali digunakan.</div>
 </div>
+</section>
+
+<section>
+<div class="panel">
+  <div class="panelhead">
+    <h2>5 TRANSAKSI TERAKHIR</h2>
+    <span class="pill" id="txCount">—</span>
+  </div>
+  <div id="latest" class="txlist"><div class="empty">Memuat transaksi…</div></div>
+</div>
+</section>
+</main>
+
+<details class="settings" id="settings">
+  <summary>PENGATURAN &amp; TOKEN API</summary>
+  <div style="font-size:11px;color:#667085;margin-top:8px">Token hanya disimpan di browser ini dan tidak ditulis ke file publik GitHub.</div>
+  <div class="tokenrow">
+    <input id="token" type="password" autocomplete="off" placeholder="Masukkan token NEXUS">
+    <button class="token-save" id="saveToken" type="button">Simpan token</button>
+    <button class="token-clear" id="clearToken" type="button">Hapus</button>
+  </div>
+  <div id="apiStatus" class="status">Token belum diperiksa.</div>
+</details>
+
+<div class="foot">NEXUS Finance · Google Sheets backend</div>
+</div>
+
 <script>
 const API="https://script.google.com/macros/s/AKfycbz-q2rvWVmg8Jcv1wKn9uly4COb7FZv9Ts5LOr5y_uQejlR8pwlWF-K4SrxRdRGzYnu/exec";
-const TOKEN_KEY="nexus_token";const $=id=>document.getElementById(id);
-const rupiah=n=>new Intl.NumberFormat("id-ID",{style:"currency",currency:"IDR",maximumFractionDigits:0}).format(Number(n)||0);
-const esc=v=>String(v??"").replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#039;"}[c]));
+const TOKEN_KEY="nexus_token";
+const $=id=>document.getElementById(id);
+
+const rupiah=n=>new Intl.NumberFormat("id-ID",{
+  style:"currency",
+  currency:"IDR",
+  maximumFractionDigits:0
+}).format(Number(n)||0);
+
+const esc=v=>String(v??"").replace(/[&<>"']/g,c=>({
+  "&":"&amp;",
+  "<":"&lt;",
+  ">":"&gt;",
+  '"':"&quot;",
+  "'":"&#039;"
+}[c]));
+
 const getToken=()=>localStorage.getItem(TOKEN_KEY)||"";
-function setStatus(id,msg,kind=""){const el=$(id);el.textContent=msg;el.className="status "+kind}
-async function request(payload,timeoutMs=12000){const controller=new AbortController(),timer=setTimeout(()=>controller.abort(),timeoutMs);try{const res=await fetch(API,{method:"POST",redirect:"follow",headers:{"Content-Type":"text/plain;charset=utf-8"},body:JSON.stringify(payload),signal:controller.signal});const text=await res.text();let data;try{data=JSON.parse(text)}catch(e){throw new Error("Response bukan JSON (HTTP "+res.status+"): "+text.slice(0,250))}return{res,data}}catch(e){if(e.name==="AbortError")throw new Error("Request timeout setelah 12 detik.");throw e}finally{clearTimeout(timer)}}
-const CATEGORY_OPTIONS={
- Expense:["Makan","Jajan","Transportasi","Rumah & Tagihan","Belanja","Keluarga & Anak","Cicilan & Langganan","Personal & Lifestyle"],
- Income:["Gaji","Remunerasi","Bonus","Penghasilan Lain"]
-};
-let lastCategoryType="Expense";
-function updateTypeFields(){
- const type=$("type").value,tr=type==="Transfer";
- if(type!=="Transfer" && type!==lastCategoryType){
-  const categories=CATEGORY_OPTIONS[type]||CATEGORY_OPTIONS.Expense;
-  $("category").innerHTML=categories.map(c=>`<option value="${esc(c)}">${esc(c)}</option>`).join("");
-  lastCategoryType=type;
- }
- $("categoryWrap").style.display=tr?"none":"block";
- $("accountWrap").style.display=tr?"none":"block";
- $("fromWrap").style.display=tr?"block":"none";
- $("toWrap").style.display=tr?"block":"none";
- $("category").required=!tr;$("account").required=!tr;
- $("fromAccount").required=tr;$("toAccount").required=tr;
+
+function setStatus(id,msg,kind=""){
+  const el=$(id);
+  el.textContent=msg;
+  el.className="status "+kind;
 }
-function renderBalances(accounts){if(!accounts||!accounts.length){$("balances").innerHTML='<span class="balance">Belum ada data rekening.</span>';return}$("balances").innerHTML=accounts.map((a,i)=>`${i?'<span class="sep">|</span>':''}<span class="balance"><strong>${esc(a.name)}</strong> : ${rupiah(a.balance)}</span>`).join("")}
-function renderTransactions(rows){$("txCount").textContent=Math.min(rows.length,5)+" transaksi";if(!rows.length){$("latest").innerHTML='<div class="empty">Belum ada transaksi.</div>';return}$("latest").innerHTML=rows.slice(0,5).map(x=>{const type=String(x.type||""),amount=Number(x.amount)||0,cls=type==="Income"?"positive":type==="Expense"?"negative":"",sign=type==="Income"?"+":type==="Expense"?"−":"",title=type==="Transfer"?`Transfer ${x.fromAccount||x.account||""} → ${x.toAccount||""}`:(x.category||type),meta=[x.date,type==="Transfer"?"Transfer":(x.account||""),x.description].filter(Boolean).join(" · ");return `<article class="tx"><div><div class="txname">${esc(title)}</div><div class="txmeta">${esc(meta)}</div></div><div class="txamount ${cls}">${sign}${rupiah(amount)}</div></article>`}).join("")}
-async function loadDashboard(){const token=getToken();if(!token){$("balances").innerHTML='<span class="balance">Saldo tampil setelah token disimpan di Pengaturan.</span>';$("latest").innerHTML='<div class="empty">Lima transaksi terakhir tampil setelah token disimpan.</div>';setStatus("apiStatus","Token belum disimpan.");return}$("refresh").disabled=true;$("balances").innerHTML='<span class="balance">Memuat saldo…</span>';$("latest").innerHTML='<div class="empty">Memuat transaksi…</div>';try{const{data}=await request({action:"dashboard",token});if(!data.success)throw new Error(data.error||"Backend menolak dashboard.");renderBalances(data.accounts||[]);renderTransactions(data.transactions||data.latestTransactions||[]);setStatus("apiStatus","Terhubung ke NEXUS. Data berhasil dimuat.","ok")}catch(e){$("balances").innerHTML='<span class="balance">Saldo gagal dimuat.</span>';$("latest").innerHTML='<div class="empty">Riwayat gagal dimuat.</div>';setStatus("apiStatus","Gagal memuat dashboard: "+e.message,"err")}finally{$("refresh").disabled=false}}
-$("type").addEventListener("change",updateTypeFields);$("refresh").addEventListener("click",loadDashboard);
-$("saveToken").addEventListener("click",()=>{const v=$("token").value.trim();if(!v){setStatus("apiStatus","Token kosong.","err");return}localStorage.setItem(TOKEN_KEY,v);$("settings").open=false;loadDashboard()});
-$("clearToken").addEventListener("click",()=>{localStorage.removeItem(TOKEN_KEY);$("token").value="";setStatus("apiStatus","Token dihapus.");loadDashboard()});
-$("transactionForm").addEventListener("submit",async ev=>{ev.preventDefault();const token=getToken();if(!token){setStatus("txStatus","Masukkan token terlebih dahulu di Pengaturan & Token API.","err");$("settings").open=true;return}const type=$("type").value,amount=Number($("amount").value);if(!Number.isFinite(amount)||amount<=0){setStatus("txStatus","Nominal harus lebih besar dari 0.","err");return}const fromAccount=$("fromAccount").value,toAccount=$("toAccount").value;if(type==="Transfer"&&fromAccount===toAccount){setStatus("txStatus","Rekening asal dan tujuan harus berbeda.","err");return}const payload={token,type,amount,category:type==="Transfer"?"Transfer":$("category").value,account:type==="Transfer"?"":$("account").value,description:$("description").value.trim(),fromAccount:type==="Transfer"?fromAccount:"",toAccount:type==="Transfer"?toAccount:""};$("saveTx").disabled=true;$("saveTx").textContent="MENYIMPAN…";setStatus("txStatus","Mengirim transaksi…");try{const{data}=await request(payload);if(!data.success)throw new Error(data.error||"Backend menolak transaksi.");setStatus("txStatus","Transaksi berhasil disimpan.","ok");$("amount").value="";$("description").value="";await loadDashboard()}catch(e){setStatus("txStatus","Transaksi gagal: "+e.message,"err")}finally{$("saveTx").disabled=false;$("saveTx").textContent="SIMPAN TRANSAKSI"}});
-$("token").value=getToken();updateTypeFields();if(getToken())loadDashboard();else{setStatus("apiStatus","Token belum disimpan. Buka bagian ini untuk pengaturan awal.");$("balances").innerHTML='<span class="balance">Saldo akan tampil setelah token disimpan.</span>';$("latest").innerHTML='<div class="empty">Lima transaksi terakhir akan tampil di sini.</div>'}
-</script></body></html>
+
+/*
+  Nama kategori di sini harus sama persis dengan kategori
+  yang diterima oleh backend / yang tercatat di Google Sheets.
+*/
+const CATEGORY_OPTIONS={
+  Expense:[
+    "Makan",
+    "Jajan",
+    "Transportasi",
+    "Rumah & Tagihan",
+    "Belanja",
+    "Keluarga & Anak",
+    "Cicilan & Langganan",
+    "Personal & Lifestyle"
+  ],
+  Income:[
+    "Gaji",
+    "Remunerasi",
+    "Bonus",
+    "Penghasilan Lain"
+  ]
+};
+
+let lastCategoryType="";
+
+function updateTypeFields(){
+  const type=$("type").value;
+  const isTransfer=type==="Transfer";
+
+  if(!isTransfer && type!==lastCategoryType){
+    const categories=CATEGORY_OPTIONS[type]||CATEGORY_OPTIONS.Expense;
+    const previousCategory=$("category").value;
+
+    $("category").innerHTML=categories.map(c=>
+      `<option value="${esc(c)}">${esc(c)}</option>`
+    ).join("");
+
+    if(categories.includes(previousCategory)){
+      $("category").value=previousCategory;
+    }
+
+    lastCategoryType=type;
+  }
+
+  $("categoryWrap").style.display=isTransfer?"none":"block";
+  $("accountWrap").style.display=isTransfer?"none":"block";
+  $("fromWrap").style.display=isTransfer?"block":"none";
+  $("toWrap").style.display=isTransfer?"block":"none";
+
+  $("category").required=!isTransfer;
+  $("account").required=!isTransfer;
+  $("fromAccount").required=isTransfer;
+  $("toAccount").required=isTransfer;
+}
+
+async function request(payload,timeoutMs=12000){
+  const controller=new AbortController();
+  const timer=setTimeout(()=>controller.abort(),timeoutMs);
+
+  try{
+    const res=await fetch(API,{
+      method:"POST",
+      redirect:"follow",
+      headers:{"Content-Type":"text/plain;charset=utf-8"},
+      body:JSON.stringify(payload),
+      signal:controller.signal
+    });
+
+    const text=await res.text();
+    let data;
+
+    try{
+      data=JSON.parse(text);
+    }catch(e){
+      throw new Error("Response bukan JSON (HTTP "+res.status+"): "+text.slice(0,250));
+    }
+
+    return {res,data};
+  }catch(e){
+    if(e.name==="AbortError"){
+      throw new Error("Request timeout setelah 12 detik.");
+    }
+    throw e;
+  }finally{
+    clearTimeout(timer);
+  }
+}
+
+function renderBalances(accounts){
+  if(!accounts||!accounts.length){
+    $("balances").innerHTML='<span class="balance">Belum ada data rekening.</span>';
+    return;
+  }
+
+  $("balances").innerHTML=accounts.map((a,i)=>
+    `${i?'<span class="sep">|</span>':''}<span class="balance"><strong>${esc(a.name)}</strong> : ${rupiah(a.balance)}</span>`
+  ).join("");
+}
+
+function renderTransactions(rows){
+  $("txCount").textContent=Math.min(rows.length,5)+" transaksi";
+
+  if(!rows.length){
+    $("latest").innerHTML='<div class="empty">Belum ada transaksi.</div>';
+    return;
+  }
+
+  $("latest").innerHTML=rows.slice(0,5).map(x=>{
+    const type=String(x.type||"");
+    const amount=Number(x.amount)||0;
+    const cls=type==="Income"?"positive":type==="Expense"?"negative":"";
+    const sign=type==="Income"?"+":type==="Expense"?"−":"";
+    const title=type==="Transfer"
+      ?`Transfer ${x.fromAccount||x.account||""} → ${x.toAccount||""}`
+      :(x.category||type);
+    const meta=[
+      x.date,
+      type==="Transfer"?"Transfer":(x.account||""),
+      x.description
+    ].filter(Boolean).join(" · ");
+
+    return `<article class="tx">
+      <div>
+        <div class="txname">${esc(title)}</div>
+        <div class="txmeta">${esc(meta)}</div>
+      </div>
+      <div class="txamount ${cls}">${sign}${rupiah(amount)}</div>
+    </article>`;
+  }).join("");
+}
+
+async function loadDashboard(){
+  const token=getToken();
+
+  if(!token){
+    $("balances").innerHTML='<span class="balance">Saldo tampil setelah token disimpan di Pengaturan.</span>';
+    $("latest").innerHTML='<div class="empty">Lima transaksi terakhir tampil setelah token disimpan.</div>';
+    setStatus("apiStatus","Token belum disimpan.");
+    return;
+  }
+
+  $("refresh").disabled=true;
+  $("balances").innerHTML='<span class="balance">Memuat saldo…</span>';
+  $("latest").innerHTML='<div class="empty">Memuat transaksi…</div>';
+
+  try{
+    const {data}=await request({action:"dashboard",token});
+
+    if(!data.success){
+      throw new Error(data.error||"Backend menolak dashboard.");
+    }
+
+    renderBalances(data.accounts||[]);
+    renderTransactions(data.transactions||data.latestTransactions||[]);
+    setStatus("apiStatus","Terhubung ke NEXUS. Data berhasil dimuat.","ok");
+  }catch(e){
+    $("balances").innerHTML='<span class="balance">Saldo gagal dimuat.</span>';
+    $("latest").innerHTML='<div class="empty">Riwayat gagal dimuat.</div>';
+    setStatus("apiStatus","Gagal memuat dashboard: "+e.message,"err");
+  }finally{
+    $("refresh").disabled=false;
+  }
+}
+
+$("type").addEventListener("change",updateTypeFields);
+$("refresh").addEventListener("click",loadDashboard);
+
+$("saveToken").addEventListener("click",()=>{
+  const v=$("token").value.trim();
+
+  if(!v){
+    setStatus("apiStatus","Token kosong.","err");
+    return;
+  }
+
+  localStorage.setItem(TOKEN_KEY,v);
+  $("settings").open=false;
+  loadDashboard();
+});
+
+$("clearToken").addEventListener("click",()=>{
+  localStorage.removeItem(TOKEN_KEY);
+  $("token").value="";
+  setStatus("apiStatus","Token dihapus.");
+  loadDashboard();
+});
+
+$("transactionForm").addEventListener("submit",async ev=>{
+  ev.preventDefault();
+
+  const token=getToken();
+
+  if(!token){
+    setStatus("txStatus","Masukkan token terlebih dahulu di Pengaturan & Token API.","err");
+    $("settings").open=true;
+    return;
+  }
+
+  const type=$("type").value;
+  const amount=Number($("amount").value);
+
+  if(!Number.isFinite(amount)||amount<=0){
+    setStatus("txStatus","Nominal harus lebih besar dari 0.","err");
+    return;
+  }
+
+  const fromAccount=$("fromAccount").value;
+  const toAccount=$("toAccount").value;
+
+  if(type==="Transfer"&&fromAccount===toAccount){
+    setStatus("txStatus","Rekening asal dan tujuan harus berbeda.","err");
+    return;
+  }
+
+  const payload={
+    token,
+    type,
+    amount,
+    category:type==="Transfer"?"Transfer":$("category").value,
+    account:type==="Transfer"?"":$("account").value,
+    description:$("description").value.trim(),
+    fromAccount:type==="Transfer"?fromAccount:"",
+    toAccount:type==="Transfer"?toAccount:""
+  };
+
+  $("saveTx").disabled=true;
+  $("saveTx").textContent="MENYIMPAN…";
+  setStatus("txStatus","Mengirim transaksi…");
+
+  try{
+    const {data}=await request(payload);
+
+    if(!data.success){
+      throw new Error(data.error||"Backend menolak transaksi.");
+    }
+
+    setStatus("txStatus","Transaksi berhasil disimpan.","ok");
+    $("amount").value="";
+    $("description").value="";
+    await loadDashboard();
+  }catch(e){
+    setStatus("txStatus","Transaksi gagal: "+e.message,"err");
+  }finally{
+    $("saveTx").disabled=false;
+    $("saveTx").textContent="SIMPAN TRANSAKSI";
+  }
+});
+
+$("token").value=getToken();
+updateTypeFields();
+
+if(getToken()){
+  loadDashboard();
+}else{
+  setStatus("apiStatus","Token belum disimpan. Buka bagian ini untuk pengaturan awal.");
+  $("balances").innerHTML='<span class="balance">Saldo akan tampil setelah token disimpan.</span>';
+  $("latest").innerHTML='<div class="empty">Lima transaksi terakhir akan tampil di sini.</div>';
+}
+</script>
+</body>
+</html>
