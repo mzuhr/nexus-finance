@@ -3,39 +3,243 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
-<meta name="theme-color" content="#111827">
+<meta name="theme-color" content="#f3f6fb">
 <title>NEXUS Finance</title>
+
 <style>
-:root{--bg:#f3f5f8;--panel:#cbd5df;--ink:#17202b;--muted:#667085;--line:#d8dee6;--accent:#182230;--good:#087443;--bad:#b42318}
-*{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--ink);font:14px/1.45 Inter,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif}
-.page{max-width:1120px;margin:0 auto;min-height:100vh;padding:18px 22px 24px}
-header{display:flex;align-items:center;justify-content:space-between;margin:0 0 14px}.brand{font-weight:850;font-size:20px;letter-spacing:.04em}.brand span{color:#667085;font-size:12px;font-weight:600;letter-spacing:.12em;margin-left:8px}
-button{cursor:pointer}.iconbtn{border:1px solid var(--line);background:#fff;border-radius:9px;padding:7px 10px;font-size:12px;text-decoration:none;color:var(--ink);display:inline-flex;align-items:center;justify-content:center;white-space:nowrap}.navbtn{border:1px solid var(--line);background:#182230;color:#fff;border-radius:9px;padding:7px 10px;font-size:12px;text-decoration:none;display:inline-flex;align-items:center;justify-content:center;white-space:nowrap}
-.balances{background:var(--panel);border-radius:4px;padding:11px 14px;margin-bottom:16px;display:flex;flex-wrap:wrap;align-items:center;justify-content:center;gap:6px 18px}
-.balance{white-space:nowrap;font-size:13px}.balance strong{font-weight:800}.sep{color:#7b8794}
-.main{display:grid;grid-template-columns:minmax(0,1.1fr) minmax(320px,.9fr);gap:16px;align-items:stretch}
-.formgrid{display:grid;grid-template-columns:1fr 1fr;gap:10px}.field{min-width:0}.field label{display:block;font-size:12px;font-weight:750;margin:0 0 5px;color:#4b5563}
-input,select{width:100%;min-width:0;border:1px solid var(--line);border-radius:5px;background:#fff;color:var(--ink);font:inherit;padding:10px 11px;outline:none}
-input:focus,select:focus{border-color:#64748b;box-shadow:0 0 0 2px #cbd5df55}.wide{grid-column:1/-1}
-.save{width:100%;min-height:41px;border:0;border-radius:5px;background:var(--accent);color:white;font-weight:800;font:inherit}.save:disabled{opacity:.55;cursor:wait}
-.panel{background:transparent;border:1px solid var(--line);border-radius:5px;padding:13px}.panelhead{display:flex;align-items:center;justify-content:space-between;gap:8px;margin:0 0 10px}h2{font-size:13px;letter-spacing:.035em;margin:0;font-weight:850}.pill{font-size:11px;color:var(--muted)}
-.txlist{display:flex;flex-direction:column}.tx{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:6px;padding:10px 0;border-bottom:1px solid var(--line)}.tx:last-child{border-bottom:0}.txname{font-weight:750;overflow-wrap:anywhere}.txmeta{font-size:11px;color:var(--muted);margin-top:2px}.txamount{font-weight:800;text-align:right;white-space:nowrap}.positive{color:var(--good)}.negative{color:var(--bad)}.empty{color:var(--muted);padding:18px 0;text-align:center;font-size:12px}
-.status{font-size:12px;padding:8px 10px;border-radius:5px;background:#e8edf2;color:#4b5563;margin-top:10px;white-space:pre-wrap;overflow-wrap:anywhere}.status.ok{background:#e7f5ec;color:#087443}.status.err{background:#fcebea;color:#b42318}
-.settings{margin-top:16px;border-top:1px solid var(--line);padding-top:10px}.settings summary{font-size:12px;font-weight:750;color:var(--muted);cursor:pointer;list-style:none;display:flex;justify-content:space-between}.settings summary::-webkit-details-marker{display:none}.settings summary:after{content:"＋"}.settings[open] summary:after{content:"−"}
-.tokenrow{display:grid;grid-template-columns:minmax(0,1fr) auto auto;gap:8px;margin-top:10px}.tokenrow button{border:0;border-radius:5px;padding:0 12px;font-weight:700}.token-save{background:#182230;color:#fff}.token-clear{background:#e5e7eb;color:#17202b}.foot{font-size:10px;color:#98a2b3;text-align:center;margin-top:12px}
-@media(max-width:680px){.page{padding:12px 12px calc(16px + env(safe-area-inset-bottom))}.brand{font-size:18px}.balances{justify-content:flex-start;gap:7px 12px;padding:10px;margin-bottom:12px}.balance{font-size:12px}.main{grid-template-columns:1fr;gap:12px}.formgrid{gap:8px}input,select{padding:10px;font-size:14px}.panel{padding:11px}.tx{padding:8px 0}.tokenrow{grid-template-columns:1fr 1fr}.tokenrow input{grid-column:1/-1;grid-row:1}}
+:root{
+  color-scheme:light;
+  --bg:#f3f6fb;
+  --surface:#ffffff;
+  --surface-alt:#f8fafc;
+  --ink:#1e293b;
+  --muted:#64748b;
+  --line:#e2e8f0;
+  --accent:#1e293b;
+  --accent-hover:#334155;
+  --good:#15803d;
+  --good-bg:#f0fdf4;
+  --bad:#dc2626;
+  --bad-bg:#fef2f2;
+  --info-bg:#eff6ff;
+  --info:#1d4ed8;
+  --shadow:0 2px 8px rgba(15,23,42,.035);
+}
+
+:root[data-theme="dark"]{
+  color-scheme:dark;
+  --bg:#0b1120;
+  --surface:#131d2e;
+  --surface-alt:#1a2639;
+  --ink:#e5edf8;
+  --muted:#94a3b8;
+  --line:#29384d;
+  --accent:#e2e8f0;
+  --accent-hover:#cbd5e1;
+  --good:#4ade80;
+  --good-bg:#142d27;
+  --bad:#f87171;
+  --bad-bg:#351d27;
+  --info-bg:#172b47;
+  --info:#93c5fd;
+  --shadow:0 2px 12px rgba(0,0,0,.12);
+}
+
+*{box-sizing:border-box}
+html{min-height:100%;background:var(--bg)}
+body{
+  margin:0;
+  background:var(--bg);
+  color:var(--ink);
+  font:14px/1.5 Inter,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
+  transition:background .2s,color .2s;
+}
+button,input,select{font:inherit}
+button{cursor:pointer}
+button:focus-visible,a:focus-visible,input:focus-visible,select:focus-visible{
+  outline:2px solid #60a5fa;
+  outline-offset:2px;
+}
+.page{max-width:1160px;margin:0 auto;min-height:100vh;padding:22px 24px 28px}
+
+header{
+  display:flex;align-items:center;justify-content:space-between;
+  gap:14px;margin-bottom:20px;
+}
+.brand{font-weight:900;font-size:22px;letter-spacing:.045em;white-space:nowrap}
+.brand span{
+  color:var(--muted);font-size:11px;font-weight:700;
+  letter-spacing:.15em;margin-left:7px;
+}
+.header-actions{display:flex;align-items:center;gap:8px;flex-wrap:wrap;justify-content:flex-end}
+.iconbtn,.navbtn{
+  border:1px solid var(--line);border-radius:10px;padding:9px 12px;
+  font-size:12px;text-decoration:none;display:inline-flex;
+  align-items:center;justify-content:center;gap:6px;white-space:nowrap;
+  transition:background .15s,border-color .15s,transform .15s;
+}
+.iconbtn{background:var(--surface);color:var(--ink)}
+.iconbtn:hover{background:var(--surface-alt)}
+.navbtn{background:var(--accent);color:var(--bg);border-color:var(--accent)}
+.navbtn:hover{opacity:.88}
+.iconbtn:active,.navbtn:active{transform:scale(.98)}
+
+.section-label{
+  font-size:10px;font-weight:800;letter-spacing:.12em;
+  color:var(--muted);margin-bottom:10px;
+}
+
+.balances{
+  background:var(--surface);border:1px solid var(--line);
+  border-radius:14px;padding:14px 16px;margin-bottom:18px;
+  display:flex;flex-wrap:wrap;align-items:center;justify-content:flex-start;
+  gap:8px;box-shadow:var(--shadow);
+}
+.balance{
+  white-space:nowrap;font-size:12px;
+  background:var(--surface-alt);border:1px solid var(--line);
+  padding:8px 10px;border-radius:9px;
+}
+.balance strong{font-weight:800}
+.sep{display:none}
+
+.main{
+  display:grid;grid-template-columns:minmax(0,1.08fr) minmax(320px,.92fr);
+  gap:18px;align-items:start;
+}
+.panel{
+  background:var(--surface);border:1px solid var(--line);
+  border-radius:14px;padding:18px;box-shadow:var(--shadow);
+  min-width:0;
+}
+.panelhead{
+  display:flex;align-items:center;justify-content:space-between;
+  gap:10px;margin:0 0 17px;
+}
+h2{font-size:12px;letter-spacing:.075em;margin:0;font-weight:850}
+.pill{
+  font-size:10px;color:var(--muted);font-weight:650;
+  background:var(--surface-alt);border:1px solid var(--line);
+  padding:4px 8px;border-radius:999px;
+}
+
+.formgrid{display:grid;grid-template-columns:1fr 1fr;gap:13px}
+.field{min-width:0}
+.field label{
+  display:block;font-size:11px;font-weight:750;
+  margin:0 0 6px;color:var(--muted);
+}
+input,select{
+  width:100%;min-width:0;border:1px solid var(--line);
+  border-radius:9px;background:var(--surface-alt);
+  color:var(--ink);padding:11px 12px;outline:none;
+  transition:border-color .15s,box-shadow .15s,background .15s;
+}
+input::placeholder{color:var(--muted);opacity:.8}
+input:focus,select:focus{
+  border-color:#64748b;
+  box-shadow:0 0 0 3px rgba(100,116,139,.13);
+}
+.wide{grid-column:1/-1}
+
+.save{
+  width:100%;min-height:44px;border:0;border-radius:9px;
+  background:var(--accent);color:var(--bg);font-weight:800;
+  letter-spacing:.025em;transition:opacity .15s,transform .15s;
+}
+.save:hover{opacity:.88}
+.save:active{transform:scale(.99)}
+.save:disabled{opacity:.55;cursor:wait}
+
+.txlist{display:flex;flex-direction:column}
+.tx{
+  display:grid;grid-template-columns:minmax(0,1fr) auto;
+  gap:10px;padding:14px 0;border-bottom:1px solid var(--line);
+}
+.tx:first-child{padding-top:0}
+.tx:last-child{border-bottom:0;padding-bottom:0}
+.txname{font-weight:750;overflow-wrap:anywhere;font-size:13px}
+.txmeta{font-size:10px;color:var(--muted);margin-top:4px;overflow-wrap:anywhere}
+.txamount{font-weight:800;text-align:right;white-space:nowrap;font-size:12px}
+.positive{color:var(--good)}
+.negative{color:var(--bad)}
+.empty{color:var(--muted);padding:25px 0;text-align:center;font-size:12px}
+
+.status{
+  font-size:11px;padding:10px 12px;border-radius:9px;
+  background:var(--surface-alt);color:var(--muted);
+  margin-top:12px;white-space:pre-wrap;overflow-wrap:anywhere;
+  border:1px solid var(--line);
+}
+.status.ok{background:var(--good-bg);color:var(--good);border-color:transparent}
+.status.err{background:var(--bad-bg);color:var(--bad);border-color:transparent}
+
+.settings{
+  margin-top:20px;border:1px solid var(--line);
+  border-radius:12px;background:var(--surface);padding:0 15px;
+}
+.settings summary{
+  padding:14px 0;font-size:11px;font-weight:800;
+  color:var(--muted);cursor:pointer;list-style:none;
+  display:flex;justify-content:space-between;align-items:center;
+}
+.settings summary::-webkit-details-marker{display:none}
+.settings summary:after{content:"＋";font-size:16px}
+.settings[open] summary:after{content:"−"}
+.settings-content{padding:0 0 15px}
+.settings-note{font-size:11px;color:var(--muted);margin:0 0 10px}
+.tokenrow{display:grid;grid-template-columns:minmax(0,1fr) auto auto;gap:8px}
+.tokenrow button{
+  border:1px solid var(--line);border-radius:9px;
+  padding:0 13px;font-weight:750;font-size:11px;
+}
+.token-save{background:var(--accent);color:var(--bg);border-color:var(--accent)!important}
+.token-clear{background:var(--surface-alt);color:var(--ink)}
+.foot{font-size:10px;color:var(--muted);text-align:center;margin-top:18px;opacity:.8}
+
+@media(max-width:760px){
+  .page{padding:14px 13px calc(18px + env(safe-area-inset-bottom))}
+  header{margin-bottom:15px;align-items:flex-start}
+  .brand{font-size:19px}
+  .brand span{font-size:10px;margin-left:4px}
+  .header-actions{gap:6px}
+  .iconbtn,.navbtn{padding:8px 9px;font-size:11px}
+  .balances{padding:11px;gap:7px;margin-bottom:13px;border-radius:12px}
+  .balance{font-size:11px;padding:7px 8px}
+  .main{grid-template-columns:1fr;gap:13px}
+  .panel{padding:14px;border-radius:12px}
+  .panelhead{margin-bottom:14px}
+  .formgrid{gap:11px}
+  input,select{padding:11px 10px;font-size:13px}
+  .tx{padding:12px 0}
+  .tokenrow{grid-template-columns:1fr 1fr}
+  .tokenrow input{grid-column:1/-1;grid-row:1;min-height:42px}
+  .tokenrow button{min-height:40px}
+}
+@media(max-width:390px){
+  .header-actions{max-width:175px}
+  .formgrid{gap:10px}
+  .brand{font-size:17px}
+}
+@media(prefers-reduced-motion:reduce){
+  *,*::before,*::after{transition:none!important;scroll-behavior:auto!important}
+}
 </style>
 </head>
+
 <body>
 <div class="page">
+
 <header>
   <div class="brand">NEXUS <span>FINANCE</span></div>
-  <div style="display:flex;align-items:center;gap:8px;flex-wrap:wrap;justify-content:flex-end">
+  <div class="header-actions">
     <a class="navbtn" href="./paylater.html">PayLater &amp; Hutang ↗</a>
+    <button class="iconbtn" id="themeToggle" type="button" aria-label="Ganti tema" title="Ganti tema">☾</button>
     <button class="iconbtn" id="refresh" type="button">↻ Muat ulang</button>
   </div>
 </header>
 
+<div class="section-label">RINGKASAN REKENING</div>
 <section class="balances" id="balances" aria-label="Saldo rekening">
   <span class="balance">Memuat saldo…</span>
 </section>
@@ -43,103 +247,120 @@ input:focus,select:focus{border-color:#64748b;box-shadow:0 0 0 2px #cbd5df55}.wi
 <main class="main">
 <section>
 <div class="panel">
-  <div class="panelhead"><h2>INPUT TRANSAKSI</h2><span class="pill">Quick entry</span></div>
+  <div class="panelhead">
+    <h2>INPUT TRANSAKSI</h2>
+    <span class="pill">QUICK ENTRY</span>
+  </div>
 
   <form id="transactionForm">
-  <div class="formgrid">
-    <div class="field">
-      <label for="type">Jenis transaksi</label>
-      <select id="type" required>
-        <option value="Expense">Expense</option>
-        <option value="Income">Income</option>
-        <option value="Transfer">Transfer</option>
-      </select>
-    </div>
+    <div class="formgrid">
 
-    <div class="field" id="categoryWrap">
-      <label for="category">Kategori</label>
-      <select id="category"></select>
-    </div>
+      <div class="field">
+        <label for="type">Jenis transaksi</label>
+        <select id="type" required>
+          <option value="Expense">Expense</option>
+          <option value="Income">Income</option>
+          <option value="Transfer">Transfer</option>
+        </select>
+      </div>
 
-    <div class="field" id="accountWrap">
-      <label for="account">Rekening</label>
-      <select id="account">
-        <option>Mandiri</option>
-        <option>GoPay</option>
-        <option>Bank Jago</option>
-        <option>Blu</option>
-        <option>Cash</option>
-        <option>ShopeePay</option>
-        <option>OVO</option>
-      </select>
-    </div>
+      <div class="field" id="categoryWrap">
+        <label for="category">Kategori</label>
+        <select id="category"></select>
+      </div>
 
-    <div class="field" id="amountWrap">
-      <label for="amount">Nominal (Rp)</label>
-      <input id="amount" type="number" min="1" step="1" inputmode="numeric" placeholder="25000" required>
-    </div>
+      <div class="field" id="accountWrap">
+        <label for="account">Rekening</label>
+        <select id="account">
+          <option>Mandiri</option>
+          <option>GoPay</option>
+          <option>Bank Jago</option>
+          <option>Blu BCA</option>
+          <option>Cash</option>
+          <option>ShopeePay</option>
+          <option>OVO</option>
+        </select>
+      </div>
 
-    <div class="field" id="fromWrap" style="display:none">
-      <label for="fromAccount">Dari rekening</label>
-      <select id="fromAccount">
-        <option>Mandiri</option>
-        <option>GoPay</option>
-        <option>Bank Jago</option>
-        <option>Blu</option>
-        <option>Cash</option>
-        <option>ShopeePay</option>
-        <option>OVO</option>
-      </select>
-    </div>
+      <div class="field" id="amountWrap">
+        <label for="amount">Nominal (Rp)</label>
+        <input id="amount" type="number" min="1" step="1"
+          inputmode="numeric" placeholder="25000" required>
+      </div>
 
-    <div class="field" id="toWrap" style="display:none">
-      <label for="toAccount">Ke rekening</label>
-      <select id="toAccount">
-        <option>Mandiri</option>
-        <option>GoPay</option>
-        <option>Bank Jago</option>
-        <option>Blu</option>
-        <option>Cash</option>
-        <option>ShopeePay</option>
-        <option>OVO</option>
-      </select>
-    </div>
+      <div class="field" id="fromWrap" style="display:none">
+        <label for="fromAccount">Dari rekening</label>
+        <select id="fromAccount">
+          <option>Mandiri</option>
+          <option>GoPay</option>
+          <option>Bank Jago</option>
+          <option>Blu BCA</option>
+          <option>Cash</option>
+          <option>ShopeePay</option>
+          <option>OVO</option>
+        </select>
+      </div>
 
-    <div class="field wide">
-      <label for="description">Keterangan</label>
-      <input id="description" maxlength="300" placeholder="Opsional, mis. KRL ke kantor">
-    </div>
+      <div class="field" id="toWrap" style="display:none">
+        <label for="toAccount">Ke rekening</label>
+        <select id="toAccount">
+          <option>Mandiri</option>
+          <option>GoPay</option>
+          <option>Bank Jago</option>
+          <option>Blu BCA</option>
+          <option>Cash</option>
+          <option>ShopeePay</option>
+          <option>OVO</option>
+        </select>
+      </div>
 
-    <div class="wide">
-      <button class="save" id="saveTx" type="submit">SIMPAN TRANSAKSI</button>
+      <div class="field wide">
+        <label for="description">Keterangan</label>
+        <input id="description" maxlength="300"
+          placeholder="Opsional, mis. KRL ke kantor">
+      </div>
+
+      <div class="wide">
+        <button class="save" id="saveTx" type="submit">SIMPAN TRANSAKSI</button>
+      </div>
     </div>
-  </div>
   </form>
 
-  <div id="txStatus" class="status" role="status">Siap. Simpan token di Pengaturan jika ini pertama kali digunakan.</div>
+  <div id="txStatus" class="status" role="status" aria-live="polite">
+    Siap. Simpan token di Pengaturan jika ini pertama kali digunakan.
+  </div>
 </div>
 </section>
 
 <section>
 <div class="panel">
   <div class="panelhead">
-    <h2>5 TRANSAKSI TERAKHIR</h2>
+    <h2>TRANSAKSI TERAKHIR</h2>
     <span class="pill" id="txCount">—</span>
   </div>
-  <div id="latest" class="txlist"><div class="empty">Memuat transaksi…</div></div>
+  <div id="latest" class="txlist">
+    <div class="empty">Memuat transaksi…</div>
+  </div>
 </div>
 </section>
 </main>
 
 <details class="settings" id="settings">
   <summary>PENGATURAN &amp; TOKEN API</summary>
-  <div style="font-size:11px;color:#667085;margin-top:8px">Token hanya disimpan di browser ini dan tidak ditulis ke file publik GitHub.</div>
-  <div class="tokenrow">
-    <input id="token" type="password" autocomplete="off" placeholder="Masukkan token NEXUS">
-    <button class="token-save" id="saveToken" type="button">Simpan token</button>
-    <button class="token-clear" id="clearToken" type="button">Hapus</button>
+  <div class="settings-content">
+    <p class="settings-note">
+      Token hanya disimpan di browser ini dan tidak ditulis ke file publik GitHub.
+    </p>
+    <div class="tokenrow">
+      <input id="token" type="password" autocomplete="off"
+        placeholder="Masukkan token NEXUS" aria-label="Token API NEXUS">
+      <button class="token-save" id="saveToken" type="button">Simpan token</button>
+      <button class="token-clear" id="clearToken" type="button">Hapus</button>
+    </div>
+    <div id="apiStatus" class="status" role="status" aria-live="polite">
+      Token belum diperiksa.
+    </div>
   </div>
-  <div id="apiStatus" class="status">Token belum diperiksa.</div>
 </details>
 
 <div class="foot">NEXUS Finance · Google Sheets backend</div>
@@ -148,6 +369,7 @@ input:focus,select:focus{border-color:#64748b;box-shadow:0 0 0 2px #cbd5df55}.wi
 <script>
 const API="https://script.google.com/macros/s/AKfycbz-q2rvWVmg8Jcv1wKn9uly4COb7FZv9Ts5LOr5y_uQejlR8pwlWF-K4SrxRdRGzYnu/exec";
 const TOKEN_KEY="nexus_token";
+const THEME_KEY="nexus_theme";
 const $=id=>document.getElementById(id);
 
 const rupiah=n=>new Intl.NumberFormat("id-ID",{
@@ -172,10 +394,24 @@ function setStatus(id,msg,kind=""){
   el.className="status "+kind;
 }
 
-/*
-  Nama kategori di sini harus sama persis dengan kategori
-  yang diterima oleh backend / yang tercatat di Google Sheets.
-*/
+/* TEMA TERANG / GELAP */
+function applyTheme(theme){
+  const selected=theme==="dark"?"dark":"light";
+  document.documentElement.dataset.theme=selected;
+  $("themeToggle").textContent=selected==="dark"?"☀":"☾";
+  $("themeToggle").title=selected==="dark"?"Gunakan tema terang":"Gunakan tema gelap";
+  $("themeToggle").setAttribute("aria-label",$("themeToggle").title);
+  document.querySelector('meta[name="theme-color"]').content=
+    selected==="dark"?"#0b1120":"#f3f6fb";
+}
+
+$("themeToggle").addEventListener("click",()=>{
+  const next=document.documentElement.dataset.theme==="dark"?"light":"dark";
+  localStorage.setItem(THEME_KEY,next);
+  applyTheme(next);
+});
+
+/* KATEGORI TRANSAKSI */
 const CATEGORY_OPTIONS={
   Expense:[
     "Makan",
@@ -201,18 +437,11 @@ function updateTypeFields(){
   const type=$("type").value;
   const isTransfer=type==="Transfer";
 
-  if(!isTransfer && type!==lastCategoryType){
+  if(!isTransfer&&type!==lastCategoryType){
     const categories=CATEGORY_OPTIONS[type]||CATEGORY_OPTIONS.Expense;
-    const previousCategory=$("category").value;
-
     $("category").innerHTML=categories.map(c=>
       `<option value="${esc(c)}">${esc(c)}</option>`
     ).join("");
-
-    if(categories.includes(previousCategory)){
-      $("category").value=previousCategory;
-    }
-
     lastCategoryType=type;
   }
 
@@ -260,17 +489,20 @@ async function request(payload,timeoutMs=12000){
   }
 }
 
+/* SALDO REKENING */
 function renderBalances(accounts){
   if(!accounts||!accounts.length){
-    $("balances").innerHTML='<span class="balance">Belum ada data rekening.</span>';
+    $("balances").innerHTML=
+      '<span class="balance">Belum ada data rekening.</span>';
     return;
   }
 
-  $("balances").innerHTML=accounts.map((a,i)=>
-    `${i?'<span class="sep">|</span>':''}<span class="balance"><strong>${esc(a.name)}</strong> : ${rupiah(a.balance)}</span>`
+  $("balances").innerHTML=accounts.map(a=>
+    `<span class="balance"><strong>${esc(a.name)}</strong> · ${rupiah(a.balance)}</span>`
   ).join("");
 }
 
+/* RIWAYAT TRANSAKSI */
 function renderTransactions(rows){
   $("txCount").textContent=Math.min(rows.length,5)+" transaksi";
 
@@ -303,12 +535,15 @@ function renderTransactions(rows){
   }).join("");
 }
 
+/* MEMUAT DASHBOARD */
 async function loadDashboard(){
   const token=getToken();
 
   if(!token){
-    $("balances").innerHTML='<span class="balance">Saldo tampil setelah token disimpan di Pengaturan.</span>';
-    $("latest").innerHTML='<div class="empty">Lima transaksi terakhir tampil setelah token disimpan.</div>';
+    $("balances").innerHTML=
+      '<span class="balance">Saldo tampil setelah token disimpan di Pengaturan.</span>';
+    $("latest").innerHTML=
+      '<div class="empty">Lima transaksi terakhir tampil setelah token disimpan.</div>';
     setStatus("apiStatus","Token belum disimpan.");
     return;
   }
@@ -328,26 +563,29 @@ async function loadDashboard(){
     renderTransactions(data.transactions||data.latestTransactions||[]);
     setStatus("apiStatus","Terhubung ke NEXUS. Data berhasil dimuat.","ok");
   }catch(e){
-    $("balances").innerHTML='<span class="balance">Saldo gagal dimuat.</span>';
-    $("latest").innerHTML='<div class="empty">Riwayat gagal dimuat.</div>';
+    $("balances").innerHTML=
+      '<span class="balance">Saldo gagal dimuat.</span>';
+    $("latest").innerHTML=
+      '<div class="empty">Riwayat gagal dimuat.</div>';
     setStatus("apiStatus","Gagal memuat dashboard: "+e.message,"err");
   }finally{
     $("refresh").disabled=false;
   }
 }
 
+/* TOMBOL DAN PENGATURAN */
 $("type").addEventListener("change",updateTypeFields);
 $("refresh").addEventListener("click",loadDashboard);
 
 $("saveToken").addEventListener("click",()=>{
-  const v=$("token").value.trim();
+  const value=$("token").value.trim();
 
-  if(!v){
+  if(!value){
     setStatus("apiStatus","Token kosong.","err");
     return;
   }
 
-  localStorage.setItem(TOKEN_KEY,v);
+  localStorage.setItem(TOKEN_KEY,value);
   $("settings").open=false;
   loadDashboard();
 });
@@ -359,6 +597,7 @@ $("clearToken").addEventListener("click",()=>{
   loadDashboard();
 });
 
+/* SIMPAN TRANSAKSI */
 $("transactionForm").addEventListener("submit",async ev=>{
   ev.preventDefault();
 
@@ -420,6 +659,14 @@ $("transactionForm").addEventListener("submit",async ev=>{
   }
 });
 
+/* INISIALISASI */
+try{
+  const savedTheme=localStorage.getItem(THEME_KEY)||"light";
+  applyTheme(savedTheme);
+}catch(e){
+  applyTheme("light");
+}
+
 $("token").value=getToken();
 updateTypeFields();
 
@@ -427,8 +674,10 @@ if(getToken()){
   loadDashboard();
 }else{
   setStatus("apiStatus","Token belum disimpan. Buka bagian ini untuk pengaturan awal.");
-  $("balances").innerHTML='<span class="balance">Saldo akan tampil setelah token disimpan.</span>';
-  $("latest").innerHTML='<div class="empty">Lima transaksi terakhir akan tampil di sini.</div>';
+  $("balances").innerHTML=
+    '<span class="balance">Saldo akan tampil setelah token disimpan.</span>';
+  $("latest").innerHTML=
+    '<div class="empty">Lima transaksi terakhir akan tampil di sini.</div>';
 }
 </script>
 </body>
